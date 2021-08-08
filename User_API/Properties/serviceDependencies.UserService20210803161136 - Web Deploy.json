@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/Userapisampara/apis/UserAPI",
+      "type": "apis.azure",
+      "apiEndpoint": "https://userapisampara.azure-api.net/user"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/user-apidbserver/databases/userresource",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DBConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "secrets1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/UserAPIKeyVault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri",
+      "secretStore": null
+    }
+  }
+}

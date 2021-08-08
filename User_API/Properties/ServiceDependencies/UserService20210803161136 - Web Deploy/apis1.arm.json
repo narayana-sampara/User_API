@@ -1,0 +1,132 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "UserAPI20210802185434ResourceGroup",
+      "metadata": {
+        "_parameterType": "resourceGroup",
+        "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
+      }
+    },
+    "resourceGroupLocation": {
+      "type": "string",
+      "defaultValue": "southeastasia",
+      "metadata": {
+        "_parameterType": "location",
+        "description": "Location of the resource group. Resource groups could have different location than resources."
+      }
+    },
+    "resourceLocation": {
+      "type": "string",
+      "defaultValue": "[parameters('resourceGroupLocation')]",
+      "metadata": {
+        "_parameterType": "location",
+        "description": "Location of the resource. By default use resource group's location, unless the resource provider is not supported there."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "name": "[parameters('resourceGroupName')]",
+      "location": "[parameters('resourceGroupLocation')]",
+      "apiVersion": "2019-10-01"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('UserAPI', subscription().subscriptionId)))]",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "apiVersion": "2019-10-01",
+      "dependsOn": [
+        "[parameters('resourceGroupName')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "name": "Userapisampara",
+              "type": "Microsoft.ApiManagement/service",
+              "location": "[parameters('resourceLocation')]",
+              "properties": {
+                "publisherEmail": "venkata.sampara@outlook.com",
+                "publisherName": "venkata.sampara@outlook.com",
+                "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
+                "hostnameConfigurations": [
+                  {
+                    "type": "Proxy",
+                    "hostName": "userapisampara.azure-api.net",
+                    "encodedCertificate": null,
+                    "keyVaultId": null,
+                    "certificatePassword": null,
+                    "negotiateClientCertificate": false,
+                    "certificate": null,
+                    "defaultSslBinding": true
+                  }
+                ],
+                "publicIPAddresses": null,
+                "privateIPAddresses": null,
+                "additionalLocations": null,
+                "virtualNetworkConfiguration": null,
+                "customProperties": {
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "true",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "False"
+                },
+                "virtualNetworkType": "None",
+                "certificates": null,
+                "apiVersionConstraint": {
+                  "minApiVersion": null
+                }
+              },
+              "sku": {
+                "name": "Consumption",
+                "capacity": 0
+              },
+              "apiVersion": "2019-12-01"
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis",
+              "name": "Userapisampara/UserAPI",
+              "properties": {
+                "displayName": "UserAPI",
+                "apiRevision": "1",
+                "description": null,
+                "subscriptionRequired": false,
+                "serviceUrl": "https://userapi20210802185434.azurewebsites.net",
+                "path": "user",
+                "protocols": [
+                  "https"
+                ],
+                "authenticationSettings": {
+                  "oAuth2": null,
+                  "openid": null
+                },
+                "subscriptionKeyParameterNames": {
+                  "header": "Ocp-Apim-Subscription-Key",
+                  "query": "subscription-key"
+                },
+                "isCurrent": true,
+                "apiVersionSetId": "/subscriptions/dec03a36-dcc3-4248-bd67-aa5395b6b0f5/resourceGroups/UserAPI20210802185434ResourceGroup/providers/Microsoft.ApiManagement/service/Userapisampara/apiVersionSets/6107efbffcd7d3e31c9b845e"
+              },
+              "apiVersion": "2019-12-01",
+              "dependsOn": [
+                "Userapisampara"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "_dependencyType": "apis.azure"
+  }
+}
